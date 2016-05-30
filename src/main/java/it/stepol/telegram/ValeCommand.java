@@ -2,6 +2,7 @@ package it.stepol.telegram;
 
 import io.github.nixtabyte.telegram.jtelebot.client.RequestHandler;
 import io.github.nixtabyte.telegram.jtelebot.exception.JsonParsingException;
+import io.github.nixtabyte.telegram.jtelebot.exception.TelegramServerException;
 import io.github.nixtabyte.telegram.jtelebot.request.TelegramRequest;
 import io.github.nixtabyte.telegram.jtelebot.request.factory.TelegramRequestFactory;
 import io.github.nixtabyte.telegram.jtelebot.response.json.Message;
@@ -23,7 +24,8 @@ public class ValeCommand extends AbstractCommand {
     public void execute() {
         try {
             TelegramRequest telegramRequest = TelegramRequestFactory.createSendMessageRequest(message.getChat().getId(), "La vale è un cavallo!", true, message.getId(), null);
-        } catch (JsonParsingException e) {
+            requestHandler.sendRequest(telegramRequest);
+        } catch (JsonParsingException | TelegramServerException e) {
             e.printStackTrace();
         }
     }
