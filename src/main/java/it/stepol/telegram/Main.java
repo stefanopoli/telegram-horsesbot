@@ -38,7 +38,5 @@ public class Main {
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         }
-
-        LOG.info("Stopping HorsesSuperBot app");
     }
 }

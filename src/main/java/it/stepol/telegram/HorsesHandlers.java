@@ -24,7 +24,7 @@ public class HorsesHandlers extends TelegramLongPollingBot {
         try {
             if (update.hasMessage()) {
                 Message message = update.getMessage();
-                if (message.hasText() || message.hasLocation()) {
+                if (message.hasText()) {
                     handleIncomingMessage(message);
                 }
             }
@@ -50,6 +50,10 @@ public class HorsesHandlers extends TelegramLongPollingBot {
         String lowerCaseMsg = message.getText().toLowerCase();
         if(lowerCaseMsg.contains("vale") || lowerCaseMsg.contains("valentina") || lowerCaseMsg.contains("bina") || lowerCaseMsg.contains("barbuscia")) {
             response = "Vuoi davvero chattare con un cavallo???";
+        } else if(lowerCaseMsg.contains("zappa") || lowerCaseMsg.contains("mattia") || lowerCaseMsg.contains("zapparoli")) {
+            response = "Zappa... TETTEEEEEEEEEEEEEE!!!!";
+        } else if(lowerCaseMsg.contains("sara") || lowerCaseMsg.contains("lamagni") || lowerCaseMsg.contains("labevi")) {
+            response = "Sara occhio... hai un calabrese alle spalle!!!!!!!!";
         }
 
         SendMessage sendMessage = getSimpleMessage(message);
@@ -61,7 +65,6 @@ public class HorsesHandlers extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(String.valueOf(message.getChatId()));
-        sendMessage.setReplayToMessageId(message.getMessageId());
         return sendMessage;
     }
 }
