@@ -1,14 +1,21 @@
 package it.stepol.telegram;
 
-import io.github.nixtabyte.telegram.jtelebot.server.impl.DefaultCommandDispatcher;
-import io.github.nixtabyte.telegram.jtelebot.server.impl.DefaultCommandQueue;
-import io.github.nixtabyte.telegram.jtelebot.server.impl.DefaultCommandWatcher;
 import org.apache.log4j.Logger;
+import org.telegram.telegrambots.TelegramApiException;
+import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.logging.BotLogger;
+import org.telegram.telegrambots.logging.BotsFileHandler;
+
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 
 /**
  * Created by Stefano Poli on 30/05/16.
  */
 public class Main {
+
+    private static final String LOGTAG = "HORSESBOT";
 
     private static final Logger LOG = Logger.getLogger(Main.class);
 
@@ -17,11 +24,20 @@ public class Main {
     public static void main(String args[]) {
         LOG.info("Creating HorsesSuperBot app");
 
-        DefaultCommandDispatcher commandDispatcher = new DefaultCommandDispatcher(10, 100, new DefaultCommandQueue());
-        commandDispatcher.startUp();
+        BotLogger.setLevel(Level.ALL);
+        BotLogger.registerLogger(new ConsoleHandler());
+        try {
+            BotLogger.registerLogger(new BotsFileHandler());
+        } catch (IOException e) {
+            BotLogger.severe("MAIN", e);
+        }
 
-        DefaultCommandWatcher commandWatcher = new DefaultCommandWatcher(2000, 100, TOKEN, commandDispatcher, new ValeCommandFactory());
-        commandWatcher.startUp();
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        try {
+            telegramBotsApi.registerBot(new HorsesHandlers());
+        } catch (TelegramApiException e) {
+            BotLogger.error(LOGTAG, e);
+        }
 
         LOG.info("Stopping HorsesSuperBot app");
     }

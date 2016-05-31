@@ -45,10 +45,16 @@
 
         <!-- Telegram -->
         <dependency>
-            <groupId>io.github.nixtabyte.telegram</groupId>
-            <artifactId>jtelebot-core</artifactId>
-            <version>0.1.0</version>
+            <groupId>com.github.rubenlagus</groupId>
+            <artifactId>TelegramBots</artifactId>
+            <version>v2.3.3.2</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>io.github.nixtabyte.telegram</groupId>-->
+            <!--<artifactId>jtelebot-core</artifactId>-->
+            <!--<version>0.1.0</version>-->
+        <!--</dependency>-->
 
         <!-- Testing -->
         <dependency>
@@ -70,5 +76,18 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>
