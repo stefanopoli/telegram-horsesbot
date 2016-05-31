@@ -46,7 +46,7 @@ public class HorsesHandlers extends TelegramLongPollingBot {
     private void handleIncomingMessage(Message message) throws TelegramApiException {
         LOG.info("MESSAGE: " + message.getChatId() + " - " + message.getCaption() + " - " + message.getText());
 
-        String response = "TEST";
+        String response = null;
         String lowerCaseMsg = message.getText().toLowerCase();
         if(lowerCaseMsg.contains("vale") || lowerCaseMsg.contains("valentina") || lowerCaseMsg.contains("bina") || lowerCaseMsg.contains("barbuscia")) {
             response = "Vuoi davvero chattare con un cavallo???";
@@ -56,9 +56,11 @@ public class HorsesHandlers extends TelegramLongPollingBot {
             response = "Sara occhio... hai un calabrese alle spalle!!!!!!!!";
         }
 
-        SendMessage sendMessage = getSimpleMessage(message);
-        sendMessage.setText(response);
-        sendMessage(sendMessage);
+        if(response != null && !response.isEmpty()) {
+            SendMessage sendMessage = getSimpleMessage(message);
+            sendMessage.setText(response);
+            sendMessage(sendMessage);
+        }
     }
 
     private SendMessage getSimpleMessage(Message message) {
