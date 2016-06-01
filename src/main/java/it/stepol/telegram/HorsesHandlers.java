@@ -1,8 +1,13 @@
 package it.stepol.telegram;
 
+import it.stepol.telegram.generators.RandomPretenceGenerator;
+import it.stepol.telegram.generators.SmartReplyGenerator;
 import org.apache.log4j.Logger;
 import org.telegram.telegrambots.TelegramApiException;
+import org.telegram.telegrambots.api.methods.send.SendAudio;
+import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -46,27 +51,34 @@ public class HorsesHandlers extends TelegramLongPollingBot {
     private void handleIncomingMessage(Message message) throws TelegramApiException {
         LOG.info("MESSAGE: " + message.getChatId() + " - " + message.getCaption() + " - " + message.getText());
 
-        String response = null;
+        HorsesMessageReply horsesMessageReply;
+        Object reply = null;
         String lowerCaseMsg = message.getText().toLowerCase();
-        if(lowerCaseMsg.contains("vale") || lowerCaseMsg.contains("valentina") || lowerCaseMsg.contains("bina") || lowerCaseMsg.contains("barbuscia")) {
-            response = "Vuoi davvero chattare con un cavallo???";
-        } else if(lowerCaseMsg.contains("zappa") || lowerCaseMsg.contains("mattia") || lowerCaseMsg.contains("zapparoli")) {
-            response = "Zappa... TETTEEEEEEEEEEEEEE!!!!";
-        } else if(lowerCaseMsg.contains("sara") || lowerCaseMsg.contains("lamagni") || lowerCaseMsg.contains("labevi")) {
-            response = "Sara occhio... hai un calabrese alle spalle!!!!!!!!";
+        if (lowerCaseMsg.contains("esci") || lowerCaseMsg.contains("usciamo") || lowerCaseMsg.contains("uscite") || lowerCaseMsg.contains("organizziamo")) {
+            horsesMessageReply = HorsesMessageReply.builder(message, new RandomPretenceGenerator("Non posso, ")).build();
+            reply = horsesMessageReply.getReply();
+        }
+        if(reply == null) {
+            horsesMessageReply = HorsesMessageReply.builder(message, new SmartReplyGenerator(message.getFrom(), 50)).build();
+            reply = horsesMessageReply.getReply();
         }
 
-        if(response != null && !response.isEmpty()) {
-            SendMessage sendMessage = getSimpleMessage(message);
-            sendMessage.setText(response);
-            sendMessage(sendMessage);
+        if(reply != null) {
+            sendReply(reply);
         }
     }
 
-    private SendMessage getSimpleMessage(Message message) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
-        return sendMessage;
+    private Message sendReply(Object reply) throws TelegramApiException {
+        Message sent = null;
+        if(reply instanceof SendMessage) {
+            sent = sendMessage((SendMessage) reply);
+        } else if(reply instanceof SendPhoto) {
+            sent = sendPhoto((SendPhoto) reply);
+        } else if(reply instanceof SendDocument) {
+            sent = sendDocument((SendDocument) reply);
+        } else if(reply instanceof SendAudio) {
+            sent = sendAudio((SendAudio) reply);
+        }
+        return sent;
     }
 }
